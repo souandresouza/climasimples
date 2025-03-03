@@ -1,0 +1,83 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;600&display=swap");
+
+/* CSS Variables for Theme Colors */
+:root {
+    --background-color: #25282A;
+    --text-color: #fff;
+    --input-background: #fff;
+    --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+input {
+    padding: 1rem;
+    border-radius: 10px;
+    border: none;
+    background-color: var(--input-background);
+    font-family: inherit;
+    box-shadow: var(--box-shadow);
+    min-width: 300px;
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+}
+
+.weather {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    color: var(--text-color);
+    margin-top: 1rem;
+}
+
+.weather-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.temperature {
+    font-size: 3rem;
+    margin: 0.5rem 0;
+}
+
+.description, .feels-like, .humidity, .uv-index, .wind {
+    font-size: 1.2rem;
+    margin: 0.3rem 0;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+}
+
+@media (max-width: 480px) {
+    .temperature {
+        font-size: 2.5rem;
+    }
+
+    .description, .feels-like, .wind {
+        font-size: 1rem;
+    }
+}
