@@ -14,7 +14,9 @@ async function getWeatherByLocation(city) {
         if (resp.ok) {
             const uvResp = await fetch(`https://api.openweathermap.org/data/2.5/uvi?lat=${respData.coord.lat}&lon=${respData.coord.lon}&appid=${apiKey}`);
             const uvData = await uvResp.json();
-            addWeatherToPage(respData, uvData.value);
+            const weatherData = { ...respData, uvIndex: uvData.value };
+            localStorage.setItem('weatherData', JSON.stringify(weatherData)); // Save weather data to localStorage
+            addWeatherToPage(weatherData);
             localStorage.setItem('lastCity', city); // Save the city to localStorage
         } else {
             main.innerHTML = `<p>Cidade não encontrada. Por favor, tente novamente.</p>`;
@@ -24,13 +26,14 @@ async function getWeatherByLocation(city) {
     }
 }
 
-function addWeatherToPage(data, uvIndex) {
+function addWeatherToPage(data) {
     const temp = Ktoc(data.main.temp);
     const feelsLike = Ktoc(data.main.feels_like);
     const humidity = data.main.humidity;
     const windSpeed = (data.wind.speed * 3.6).toFixed(2);
     const windDirection = getWindDirection(data.wind.deg);
     const description = translateDescription(data.weather[0].main);
+    const uvIndex = data.uvIndex;
 
     const weather = document.createElement('div');
     weather.classList.add('weather');
@@ -53,6 +56,20 @@ function addWeatherToPage(data, uvIndex) {
     main.innerHTML = "";
     main.appendChild(weather);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const weatherData = localStorage.getItem('weatherData');
+    if (weatherData) {
+        addWeatherToPage(JSON.parse(weatherData));
+    } else {
+        const lastCity = localStorage.getItem('lastCity');
+        if (lastCity) {
+            getWeatherByLocation(lastCity);
+        } else {
+            main.innerHTML = ""; // Ensure main is empty if no city is saved
+        }
+    }
+});
 
 function translateDescription(description) {
     const translations = {
@@ -84,13 +101,6 @@ function getWindDirection(degree) {
 function Ktoc(K) {
     return Math.floor(K - 273.15);
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const lastCity = localStorage.getItem('lastCity');
-    if (lastCity) {
-        getWeatherByLocation(lastCity);
-    }
-});
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
