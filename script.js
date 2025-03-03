@@ -15,6 +15,7 @@ async function getWeatherByLocation(city) {
             const uvResp = await fetch(`https://api.openweathermap.org/data/2.5/uvi?lat=${respData.coord.lat}&lon=${respData.coord.lon}&appid=${apiKey}`);
             const uvData = await uvResp.json();
             addWeatherToPage(respData, uvData.value);
+            localStorage.setItem('lastCity', city); // Save the city to localStorage
         } else {
             main.innerHTML = `<p>Cidade não encontrada. Por favor, tente novamente.</p>`;
         }
@@ -83,6 +84,13 @@ function getWindDirection(degree) {
 function Ktoc(K) {
     return Math.floor(K - 273.15);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const lastCity = localStorage.getItem('lastCity');
+    if (lastCity) {
+        getWeatherByLocation(lastCity);
+    }
+});
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
